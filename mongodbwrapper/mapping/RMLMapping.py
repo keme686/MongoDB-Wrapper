@@ -24,11 +24,12 @@ class RMLPredicate(object):
 
 
 class RMLSubject(object):
-    def __init__(self, id, logicalsource, collectionName, databaseName, subjecttemplate, subjectclass="rdfs:Class", predicates=[]):
+    def __init__(self, id, logicalsource, collectionName, databaseName, server, subjecttemplate, subjectclass="rdfs:Class", predicates=[]):
         self.id = id
         self.logicalsource = logicalsource
         self.collectionName = collectionName
         self.databaseName = databaseName
+        self.server = server
         self.subjecttemplate = subjecttemplate
         self.subjectclass = subjectclass
         self.predicates = predicates
@@ -106,6 +107,7 @@ class RMLMapping(object):
                               "?source rml:source ?sourceuri. " \
                               "?source rml:collection ?sourcecollection. "\
                               "?source rml:database ?sourcedatabase. " \
+                              "?source rml:server ?server. " \
                               "?s rr:subjectMap ?smap. " \
                               "?smap rr:template ?subjtemplate. " \
                               "?smap rr:class " + subj + ". " \
@@ -134,7 +136,7 @@ class RMLMapping(object):
                 subjectclass = row.subjectclass
 
             subject = RMLSubject(str(row.s), str(row.sourceuri), str(row.sourcecollection), str(row.sourcedatabase),
-                                 str(row.subjtemplate), "<"+str(subjectclass)+">", [pred])
+                                 str(row.server), str(row.subjtemplate), "<"+str(subjectclass)+">", [pred])
 
             subjects = [s for s in self.subjectmaps if s.id == str(row.s)]
             if len(subjects) > 0:

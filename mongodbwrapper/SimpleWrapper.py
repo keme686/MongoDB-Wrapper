@@ -5,11 +5,17 @@ from pymongo import MongoClient
 
 
 class SimpleWrapper(object):
-    def __init__(self, molecule, mapping, mongourl="localhost:27017"):
-        self.client = MongoClient(mongourl)
+    def __init__(self, molecule, mapping, mongourl=None):
         self.molecule = molecule
         self.mappingfile = mapping
         self.mapping = RMLMapping(self.mappingfile).getMapping(self.molecule)
+        if mongourl is not None:
+            self.client = MongoClient(mongourl)
+        elif self.mapping[0].server is not None and len(self.mapping[0].server) > 0:
+            self.client = MongoClient(self.mapping[0].server)
+        else:
+            self.client = MongoClient("localhost:27017")
+
         self.db = self.client.get_database(self.mapping[0].databaseName)
         self.collection = self.db.get_collection(self.mapping[0].collectionName)
 

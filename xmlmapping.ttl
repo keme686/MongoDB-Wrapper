@@ -1,0 +1,308 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix bsbm-inst: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/> .
+@prefix bsbm: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rev: <http://purl.org/stuff/rev#> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix base: <http://eis.iai.uni-bonn.de/ontario/mapping#> .
+
+#PRODUCT mappings
+
+    <#ProductMappings>
+      rml:logicalSource [
+        rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/products.xml" ;
+         rml:iterator "/products/product";
+         rml:collection "product";
+         rml:database "bsbm100";
+         rml:server "localhost:27017";
+         rml:referenceFormulation ql:XPath
+      ];
+      rr:subjectMap [
+        rr:template "{id}";
+        rr:class bsbm:Product
+      ];
+
+      rr:predicateObjectMap [
+        rr:predicate rdf:type;
+        rr:objectMap [
+          rml:reference "ptype";
+          rr:datatype xsd:anyURI
+          ]
+        ];
+
+        rr:predicateObjectMap [
+             rr:predicate dc:date;
+             rr:objectMap [
+               rml:reference "date";
+               rr:datatype xsd:date
+               ]
+             ];
+
+        rr:predicateObjectMap [
+          rr:predicate bsbm:producer ;
+          rr:objectMap [
+            rml:reference "producer";
+            rr:datatype xsd:anyURI
+          ]
+        ];
+
+        rr:predicateObjectMap [
+          rr:predicate dc:publisher ;
+          rr:objectMap [
+            rml:reference "publisher";
+            rr:datatype xsd:anyURI
+          ]
+        ];
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productFeature;
+            rr:objectMap [
+              rml:reference "productFeature";
+              rr:datatype xsd:string
+            ]
+          ];
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyNumeric1 ;
+            rr:objectMap [
+              rml:reference "numeric1";
+              rr:datatype xsd:int
+            ]
+          ];
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyNumeric2 ;
+            rr:objectMap [
+              rml:reference "numeric2";
+              rr:datatype xsd:int
+            ]
+          ];
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyNumeric3 ;
+        rr:objectMap [
+          rml:reference "numeric3";
+          rr:datatype xsd:int
+            ]
+          ];
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyNumeric5 ;
+            rr:objectMap [
+              rml:reference "numeric5";
+              rr:datatype xsd:int
+            ]
+          ];
+
+           rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyTextual2 ;
+            rr:objectMap [
+              rml:reference "textual2";
+              rr:datatype xsd:string
+            ]
+          ];
+
+
+          rr:predicateObjectMap [
+            rr:predicate bsbm:productPropertyTextual5 ;
+            rr:objectMap [
+              rml:reference "textual5";
+              rr:datatype xsd:string
+            ]
+          ].
+
+  #=============================================================
+  #OFFER mappings
+  <#OfferMappings>
+    rml:logicalSource [
+      rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/offers.xml" ;
+      rml:iterator "/offers/offer";
+      rml:collection "offer";
+    rml:database "bsbm100";
+    rml:server "localhost:27017";
+    rml:referenceFormulation ql:XPath
+    ];
+    rr:subjectMap [
+      rr:template "{id}";
+      rr:class bsbm:Offer
+    ];
+
+    rr:predicateObjectMap [
+      rr:predicate bsbm:product;
+      rr:objectMap [
+        rml:reference "product";
+        rr:datatype xsd:anyURI
+        ]
+      ].
+
+  #=============================================================
+  #PERSON mappings
+  <#PersonMappings>
+    rml:logicalSource [
+      rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/persons.xml" ;
+      rml:iterator "/persons/person";
+      rml:collection "person";
+      rml:database "bsbm100";
+      rml:server "localhost:27017";
+      rml:referenceFormulation ql:XPath
+    ];
+    rr:subjectMap [
+      rr:template "{id}";
+      rr:class foaf:Person
+    ];
+
+    rr:predicateObjectMap [
+      rr:predicate bsbm:country;
+      rr:objectMap [
+        rml:reference "country";
+        rr:datatype xsd:anyURI
+        ]
+      ].
+    #=============================================================
+  #PRODUCER mappings
+   <#ProducerMappings>
+      rml:logicalSource [
+        rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/producers.xml" ;
+        rml:iterator "/producers/producer";
+        rml:collection "producer";
+        rml:database "bsbm100";
+        rml:server "localhost:27017";
+      rml:referenceFormulation ql:XPath
+      ];
+      rr:subjectMap [
+        rr:template "{id}";
+        rr:class bsbm:Producer
+      ];
+
+      rr:predicateObjectMap [
+         rr:predicate dc:date;
+         rr:objectMap [
+           rml:reference "date";
+           rr:datatype xsd:date
+           ]
+         ];
+
+       rr:predicateObjectMap [
+           rr:predicate bsbm:country;
+           rr:objectMap [
+             rml:reference "country";
+             rr:datatype xsd:anyURI
+             ]
+        ];
+
+       rr:predicateObjectMap [
+         rr:predicate rdfs:comment ;
+         rr:objectMap [
+           rml:reference "comment";
+           rr:datatype xsd:string
+         ]
+       ].
+
+   #=============================================================
+   #PRODUCTTYPE mappings
+   <#ProductTypeMappings>
+           rml:logicalSource [
+             rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/producttypes.xml" ;
+             rml:iterator "/producttypes/producttype";
+             rml:collection "producttype";
+            rml:database "bsbm100";
+            rml:server "localhost:27017";
+            rml:referenceFormulation ql:XPath
+           ];
+           rr:subjectMap [
+             rr:template "{id}";
+             rr:class bsbm:ProductType
+           ];
+           rr:predicateObjectMap [
+               rr:predicate rdf:type;
+               rr:objectMap [
+                 rml:reference "type";
+                 rr:datatype xsd:anyURI
+                 ]
+            ].
+    #=============================================================
+    #REVIEW mappings
+    <#ReviewMappings>
+        rml:logicalSource [
+          rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/reviews.xml" ;
+          rml:iterator "/reviews/review";
+          rml:collection "review";
+          rml:database "bsbm100";
+          rml:server "localhost:27017";
+          rml:referenceFormulation ql:XPath
+        ];
+        rr:subjectMap [
+          rr:template "{id}";
+          rr:class rev:Review
+        ];
+        rr:predicateObjectMap [
+              rr:predicate dc:date;
+          rr:objectMap [
+            rml:reference "date";
+            rr:datatype xsd:date
+            ]
+          ].
+
+
+    #=============================================================
+     #VENDOR mappings
+     <#VendorMappings>
+            rml:logicalSource [
+              rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/vendors.xml" ;
+              rml:iterator "/vendors/vendor";
+              rml:collection "vendor";
+            rml:database "bsbm100";
+            rml:server "localhost:27017";
+              rml:referenceFormulation ql:XPath
+            ];
+            rr:subjectMap [
+              rr:template "{id}";
+              rr:class bsbm:Vendor
+            ];
+
+            rr:predicateObjectMap [
+              rr:predicate bsbm:country;
+              rr:objectMap [
+                rml:reference "country";
+                rr:datatype xsd:anyURI
+                ]
+              ];
+
+            rr:predicateObjectMap [
+              rr:predicate rdfs:label ;
+              rr:objectMap [
+                rml:reference "label";
+                rr:datatype xsd:string
+              ]
+     ].
+
+    #=============================================================
+   #PRODUCTFEATURE mappings
+   <#ProductFeatureMappings>
+       rml:logicalSource [
+         rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/productfeatures.xml" ;
+         rml:iterator "/productfeatures/productfeature";
+         rml:collection "productfeature";
+         rml:database "bsbm100";
+         rml:server "localhost:27017";
+         rml:referenceFormulation ql:XPath
+       ];
+       rr:subjectMap [
+         rr:template "{id}";
+         rr:class bsbm:ProductFeature
+       ];
+
+       rr:predicateObjectMap [
+         rr:predicate dc:publisher;
+         rr:objectMap [
+           rml:reference "publisher";
+           rr:datatype xsd:string
+           ]
+         ].
+
