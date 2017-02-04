@@ -20,7 +20,7 @@
          rml:iterator "/products/product";
          rml:collection "product";
          rml:database "bsbm100";
-         rml:server "localhost:27017";
+         rml:server "172.18.160.17:27093";
          rml:referenceFormulation ql:XPath
       ];
       rr:subjectMap [
@@ -125,7 +125,7 @@
       rml:iterator "/offers/offer";
       rml:collection "offer";
     rml:database "bsbm100";
-    rml:server "localhost:27017";
+    rml:server "172.18.160.17:27093";
     rml:referenceFormulation ql:XPath
     ];
     rr:subjectMap [
@@ -149,7 +149,7 @@
       rml:iterator "/persons/person";
       rml:collection "person";
       rml:database "bsbm100";
-      rml:server "localhost:27017";
+      rml:server "172.18.160.17:27093";
       rml:referenceFormulation ql:XPath
     ];
     rr:subjectMap [
@@ -172,7 +172,7 @@
         rml:iterator "/producers/producer";
         rml:collection "producer";
         rml:database "bsbm100";
-        rml:server "localhost:27017";
+        rml:server "172.18.160.17:27093";
       rml:referenceFormulation ql:XPath
       ];
       rr:subjectMap [
@@ -212,7 +212,7 @@
              rml:iterator "/producttypes/producttype";
              rml:collection "producttype";
             rml:database "bsbm100";
-            rml:server "localhost:27017";
+            rml:server "172.18.160.17:27093";
             rml:referenceFormulation ql:XPath
            ];
            rr:subjectMap [
@@ -234,7 +234,7 @@
           rml:iterator "/reviews/review";
           rml:collection "review";
           rml:database "bsbm100";
-          rml:server "localhost:27017";
+          rml:server "172.18.160.17:27093";
           rml:referenceFormulation ql:XPath
         ];
         rr:subjectMap [
@@ -258,7 +258,7 @@
               rml:iterator "/vendors/vendor";
               rml:collection "vendor";
             rml:database "bsbm100";
-            rml:server "localhost:27017";
+            rml:server "172.18.160.17:27093";
               rml:referenceFormulation ql:XPath
             ];
             rr:subjectMap [
@@ -290,7 +290,7 @@
          rml:iterator "/productfeatures/productfeature";
          rml:collection "productfeature";
          rml:database "bsbm100";
-         rml:server "localhost:27017";
+         rml:server "172.18.160.17:27093";
          rml:referenceFormulation ql:XPath
        ];
        rr:subjectMap [

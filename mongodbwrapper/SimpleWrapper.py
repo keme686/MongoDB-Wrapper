@@ -73,8 +73,44 @@ class SimpleWrapper(object):
             if predobjmap[k] in args:
                 mproj[predobjmap[k][1:]] = "$"+v
 
+        #sparqlfilters = self.getFilters(filters)
+
         return mquery, mproj, predmap
 
+    def getFilters(self, filters):
+        qfs = []
+        fquery = {}
+        for f in filters:
+            r = ""
+            l = ""
+            if isinstance(f.expr.left, Argument) and isinstance(f.expr.right, Argument):
+                left = f.expr.left
+                if left.constant:
+                    if "<" in left.name:
+                        left = "'" + left.name[1:-1] + "'"
+                    else:
+                        left = left.name
+                    r = left
+                else:
+                    left = left.name[1:]
+                    l = left
+
+                right = f.expr.right
+                if right.constant:
+                    if "<" in right.name:
+                        right = "'" + right.name[1:-1] + "'"
+                    else:
+                        right = right.name
+                    r = right
+                else:
+                    right = right.name[1:]
+                    l = right
+                if "'" not in r and '"' not in r:
+                    r = "'" + r + "'"
+                qfs.append(l + " " + f.expr.op + " " + r)
+        qfs = " and ".join(map(str, qfs))
+
+        return fquery
     def decomposeQuery(self, query):
         """
         decomposes a query to set of Triples and set of Filters
@@ -120,5 +156,5 @@ if __name__ == "__main__":
     #sw.rewrite(query)
     cur = sw.exeQuery(query)
     print cur
-    for d in cur: #{"person":"http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromRatingSite1/Reviewer1"}
+    for d in cur:
         print d

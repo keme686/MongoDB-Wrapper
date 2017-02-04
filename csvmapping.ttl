@@ -20,7 +20,7 @@
     rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/product.csv" ;
     rml:collection "product";
     rml:database "bsbm100";
-    rml:server "localhost:27017";
+    rml:server "172.18.160.17:27092";
     rml:referenceFormulation ql:CSV
   ];
   rr:subjectMap [
@@ -59,7 +59,7 @@
       rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/offer.csv" ;
       rml:collection "offer";
       rml:database "bsbm100";
-      rml:server "localhost:27017";
+      rml:server "172.18.160.17:27092";
       rml:referenceFormulation ql:CSV
     ];
     rr:subjectMap [
@@ -91,7 +91,7 @@
       rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/person.csv" ;
       rml:collection "person";
     rml:database "bsbm100";
-    rml:server "localhost:27017";
+    rml:server "172.18.160.17:27092";
       rml:referenceFormulation ql:CSV
     ];
     rr:subjectMap [
@@ -137,7 +137,7 @@
         rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/producer.csv" ;
         rml:collection "producer";
         rml:database "bsbm100";
-        rml:server "localhost:27017";
+        rml:server "172.18.160.17:27092";
         rml:referenceFormulation ql:CSV
       ];
       rr:subjectMap [
@@ -167,7 +167,7 @@
          rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/productfeature.csv" ;
          rml:collection "productfeature";
          rml:database "bsbm100";
-         rml:server "localhost:27017";
+         rml:server "172.18.160.17:27092";
          rml:referenceFormulation ql:CSV
        ];
        rr:subjectMap [
@@ -206,7 +206,7 @@
              rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/producttype.csv" ;
              rml:collection "producttype";
              rml:database "bsbm100";
-             rml:server "localhost:27017";
+             rml:server "172.18.160.17:27092";
              rml:referenceFormulation ql:CSV
            ];
            rr:subjectMap [
@@ -237,7 +237,7 @@
           rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/review.csv" ;
           rml:collection "review";
           rml:database "bsbm100";
-          rml:server "localhost:27017";
+          rml:server "172.18.160.17:27092";
           rml:referenceFormulation ql:CSV
         ];
         rr:subjectMap [
@@ -282,7 +282,7 @@
               rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/csv/vendor.csv" ;
               rml:collection "vendor";
               rml:database "bsbm100";
-              rml:server "localhost:27017";
+              rml:server "172.18.160.17:27092";
               rml:referenceFormulation ql:CSV
             ];
             rr:subjectMap [

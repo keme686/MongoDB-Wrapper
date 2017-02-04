@@ -1,6 +1,6 @@
 1. Start your MongoDB server
 2. Run flask based REST server:
-    - python mongodbwrapper/MongodbEndpoint.py
-    - Note: edit `config` file first to specify mapping file name
+    - python setup.py install
+    - python MongodbEndpoint.py -p 27000 -m csvmapping.ttl
 3. Run test:
     - python test_rest.py
