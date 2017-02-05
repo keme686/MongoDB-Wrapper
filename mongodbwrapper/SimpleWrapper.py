@@ -23,19 +23,18 @@ class SimpleWrapper(object):
         sparql = qp.parse(query)
         mquery, mproj, predmap = self.rewrite(sparql)
         mproj["_id"] = 0
-        agg = []
-
+        pipeline = []
         if len(mquery) > 0:
-            agg.append({"$match": mquery})
-        agg.append({"$project": mproj})
+            pipeline.append({"$match": mquery})
+        pipeline.append({"$project": mproj})
         if sparql.limit > 0:
             if sparql.offset > 0:
-                agg.append({"$limit": int(sparql.limit) + int(sparql.offset)})
-                agg.append({"$skip": int(sparql.offset)})
+                pipeline.append({"$limit": int(sparql.limit) + int(sparql.offset)})
+                pipeline.append({"$skip": int(sparql.offset)})
             else:
-                agg.append({"$limit": int(sparql.limit)})
-
-        return list(self.collection.aggregate(agg))
+                pipeline.append({"$limit": int(sparql.limit)})
+        print "agg:", pipeline
+        return list(self.collection.aggregate(pipeline))
 
     def rewrite(self, sparql):
 
@@ -88,10 +87,17 @@ class SimpleWrapper(object):
         for f in sparqlfilters:
             if f in mquery:
                 if type(mquery[f]) == dict:
-                    mquery[f]["$in"].append(sparqlfilters[f])
+                    if type(sparqlfilters[f]) == dict:
+                        mquery[f].update(sparqlfilters[f])
+                    else:
+                        mquery[f]["$in"].append(sparqlfilters[f])
                 else:
-                    mquery[f] = {"$in": [mquery[f]]}
-                    mquery[f]["$in"].append(sparqlfilters[f])
+                    if type(sparqlfilters[f]) == dict:
+                        mquery[f] = {"$eq": mquery[f]}
+                        mquery[f].update(sparqlfilters[f])
+                    else:
+                        mquery[f] = {"$in": [mquery[f]]}
+                        mquery[f]["$in"].append(sparqlfilters[f])
             else:
                 mquery[f] = sparqlfilters[f]
 
@@ -146,7 +152,10 @@ class SimpleWrapper(object):
                     if v == l:
                         for kk, vv in predmap:
                             if k == kk:
-                                fquery[vv] = {op: r}
+                                if op == "$eq":
+                                    fquery[vv] = r
+                                else:
+                                    fquery[vv] = {op: r}
 
         return fquery
 

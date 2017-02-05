@@ -17,7 +17,7 @@ if __name__ == "__main__":
         FILTER ((?p3 < 156)) .
         FILTER ((?pf != <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductFeature8001>))
 
-        } LIMIT 10000 OFFSET 0
+        } LIMIT 1
     '''
     #sw.rewrite(query)
     cur = sw.exeQuery(query)
