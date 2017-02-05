@@ -107,7 +107,7 @@ class SimpleWrapper(object):
                 left = f.expr.left
                 if left.constant:
                     if "<" in left.name:
-                        left = left.name[1:-1]
+                        left = "'" + left.name[1:-1] + "'"
                     else:
                         left = left.name
                     r = left
@@ -118,7 +118,7 @@ class SimpleWrapper(object):
                 right = f.expr.right
                 if right.constant:
                     if "<" in right.name:
-                        right = right.name[1:-1]
+                        right = "'" + right.name[1:-1] + "'"
                     else:
                         right = right.name
                     r = right
