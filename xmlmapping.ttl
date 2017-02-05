@@ -19,12 +19,12 @@
         rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/products.xml" ;
          rml:iterator "/products/product";
          rml:collection "product";
-         rml:database "bsbm100";
-         rml:server "172.18.160.17:27093";
+         rml:database "bsbm100xml";
+         rml:server "localhost:27017";
          rml:referenceFormulation ql:XPath
       ];
       rr:subjectMap [
-        rr:template "{id}";
+        rr:template "{product}";
         rr:class bsbm:Product
       ];
 
@@ -129,7 +129,7 @@
     rml:referenceFormulation ql:XPath
     ];
     rr:subjectMap [
-      rr:template "{id}";
+      rr:template "{offer}";
       rr:class bsbm:Offer
     ];
 
@@ -153,7 +153,7 @@
       rml:referenceFormulation ql:XPath
     ];
     rr:subjectMap [
-      rr:template "{id}";
+      rr:template "{person}";
       rr:class foaf:Person
     ];
 
@@ -176,7 +176,7 @@
       rml:referenceFormulation ql:XPath
       ];
       rr:subjectMap [
-        rr:template "{id}";
+        rr:template "{producer}";
         rr:class bsbm:Producer
       ];
 
@@ -216,7 +216,7 @@
             rml:referenceFormulation ql:XPath
            ];
            rr:subjectMap [
-             rr:template "{id}";
+             rr:template "{producttype}";
              rr:class bsbm:ProductType
            ];
            rr:predicateObjectMap [
@@ -238,7 +238,7 @@
           rml:referenceFormulation ql:XPath
         ];
         rr:subjectMap [
-          rr:template "{id}";
+          rr:template "{review}";
           rr:class rev:Review
         ];
         rr:predicateObjectMap [
@@ -262,7 +262,7 @@
               rml:referenceFormulation ql:XPath
             ];
             rr:subjectMap [
-              rr:template "{id}";
+              rr:template "{vendor}";
               rr:class bsbm:Vendor
             ];
 
@@ -290,11 +290,11 @@
          rml:iterator "/productfeatures/productfeature";
          rml:collection "productfeature";
          rml:database "bsbm100";
-         rml:server "172.18.160.17:27093";
+         rml:server "localhost:27017";
          rml:referenceFormulation ql:XPath
        ];
        rr:subjectMap [
-         rr:template "{id}";
+         rr:template "{productfeature}";
          rr:class bsbm:ProductFeature
        ];
 

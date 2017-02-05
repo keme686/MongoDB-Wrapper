@@ -59,4 +59,4 @@ if __name__ == "__main__":
         usage()
         sys.exit(1)
     print port, mapping
-    app.run(port=port)
+    app.run(port=port,host="0.0.0.0")

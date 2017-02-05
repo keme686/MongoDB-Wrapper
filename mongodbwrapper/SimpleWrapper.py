@@ -30,10 +30,11 @@ class SimpleWrapper(object):
         agg.append({"$project": mproj})
         if sparql.limit > 0:
             if sparql.offset > 0:
-                agg.append({"$limit":int(sparql.limit) + int(sparql.offset)})
+                agg.append({"$limit": int(sparql.limit) + int(sparql.offset)})
                 agg.append({"$skip": int(sparql.offset)})
             else:
                 agg.append({"$limit": int(sparql.limit)})
+
         return list(self.collection.aggregate(agg))
 
     def rewrite(self, sparql):
@@ -57,13 +58,23 @@ class SimpleWrapper(object):
                 qmap.append(t.predicate.name)
                 if t.theobject.constant:
                     if "<" in t.theobject.name and '>' in t.theobject.name:
-                        filtermap[t.predicate.name] = str(t.theobject.name[1:-1])
+                        value = str(t.theobject.name[1:-1])
                     else:
-                        filtermap[t.predicate.name] = str(t.theobject.name.replace('"', ''))
+                        value = str(t.theobject.name.replace('"', ''))
+
+                    if t.predicate.name in filtermap:
+                        if type(filtermap[t.predicate.name]) == dict:
+                            filtermap[t.predicate.name]["$in"].append(value)
+                        else:
+                            filtermap[t.predicate.name] = {"$in": [filtermap[t.predicate.name]]}
+                            filtermap[t.predicate.name]["$in"].append(value)
+                    else:
+                        filtermap[t.predicate.name] = value
 
         for p in self.mapping[0].predicates:
             if p.predicate in qmap:
-                predmap.append((p.predicate, p.refmap.name))
+                if (p.predicate, p.refmap.name) not in predmap:
+                    predmap.append((p.predicate, p.refmap.name))
         mquery = {}
         mproj = {}
         args = [a.name for a in sparql.args]
@@ -73,13 +84,28 @@ class SimpleWrapper(object):
             if predobjmap[k] in args:
                 mproj[predobjmap[k][1:]] = "$"+v
 
-        #sparqlfilters = self.getFilters(filters)
+        sparqlfilters = self.getFilters(filters, predmap, predobjmap)
+        print "mongo filter:", sparqlfilters
+        for f in sparqlfilters:
+            if f in mquery:
+                if type(mquery[f]) == dict:
+                    mquery[f]["$in"].append(sparqlfilters[f])
+                else:
+                    mquery[f] = {"$in": [mquery[f]]}
+                    mquery[f]["$in"].append(sparqlfilters[f])
+            else:
+                mquery[f] = sparqlfilters[f]
+        print 'mongoquery:', mquery
+        print 'mongoproj:', mproj
+        print 'predmap:', predmap
+        print 'predobjmap:', predobjmap
 
+        print "---------------------------------------"
         return mquery, mproj, predmap
 
-    def getFilters(self, filters):
-        qfs = []
+    def getFilters(self, filters, predmap, predobjmap):
         fquery = {}
+        print filters
         for f in filters:
             r = ""
             l = ""
@@ -87,30 +113,52 @@ class SimpleWrapper(object):
                 left = f.expr.left
                 if left.constant:
                     if "<" in left.name:
-                        left = "'" + left.name[1:-1] + "'"
+                        left = left.name[1:-1]
                     else:
                         left = left.name
                     r = left
                 else:
-                    left = left.name[1:]
+                    left = left.name
                     l = left
 
                 right = f.expr.right
                 if right.constant:
                     if "<" in right.name:
-                        right = "'" + right.name[1:-1] + "'"
+                        right = right.name[1:-1]
                     else:
                         right = right.name
                     r = right
                 else:
-                    right = right.name[1:]
+                    right = right.name
                     l = right
                 if "'" not in r and '"' not in r:
-                    r = "'" + r + "'"
-                qfs.append(l + " " + f.expr.op + " " + r)
-        qfs = " and ".join(map(str, qfs))
+                    r = int(r)
+                else:
+                    r = r.replace('"', '').replace("'", '')
+                op = "$eq"
+                if f.expr.op == '>':
+                    op = "$gt"
+                elif f.expr.op == '<':
+                    op = "$lt"
+                elif f.expr.op == '>=':
+                    op = "$gte"
+                elif f.expr.op == '<=':
+                    op = "$lte"
+                elif f.expr.op == '!=':
+                    op = "$ne"
+                print 'left', l
+                print 'right', r
+                print 'op', op
+                for k in predobjmap:
+                    v = predobjmap[k]
+                    if v == l:
+                        for kk, vv in predmap:
+                            if k == kk:
+                                fquery[vv] = {op: r}
 
         return fquery
+
+
     def decomposeQuery(self, query):
         """
         decomposes a query to set of Triples and set of Filters
