@@ -19,8 +19,8 @@
         rml:source "hdfs://akswnc5.informatik.uni-leipzig.de:54310/ontario/datasets/bsbm100m/xml/products.xml" ;
          rml:iterator "/products/product";
          rml:collection "product";
-         rml:database "bsbm100xml";
-         rml:server "localhost:27017";
+         rml:database "bsbm100";
+         rml:server "172.18.160.17:27093";
          rml:referenceFormulation ql:XPath
       ];
       rr:subjectMap [
