@@ -85,7 +85,6 @@ class SimpleWrapper(object):
                 mproj[predobjmap[k][1:]] = "$"+v
 
         sparqlfilters = self.getFilters(filters, predmap, predobjmap)
-        print "mongo filter:", sparqlfilters
         for f in sparqlfilters:
             if f in mquery:
                 if type(mquery[f]) == dict:
@@ -95,17 +94,12 @@ class SimpleWrapper(object):
                     mquery[f]["$in"].append(sparqlfilters[f])
             else:
                 mquery[f] = sparqlfilters[f]
-        print 'mongoquery:', mquery
-        print 'mongoproj:', mproj
-        print 'predmap:', predmap
-        print 'predobjmap:', predobjmap
 
-        print "---------------------------------------"
         return mquery, mproj, predmap
 
     def getFilters(self, filters, predmap, predobjmap):
         fquery = {}
-        print filters
+
         for f in filters:
             r = ""
             l = ""
@@ -146,9 +140,7 @@ class SimpleWrapper(object):
                     op = "$lte"
                 elif f.expr.op == '!=':
                     op = "$ne"
-                print 'left', l
-                print 'right', r
-                print 'op', op
+
                 for k in predobjmap:
                     v = predobjmap[k]
                     if v == l:

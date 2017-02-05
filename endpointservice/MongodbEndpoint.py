@@ -10,6 +10,7 @@ from mongodbwrapper.SimpleWrapper import SimpleWrapper
 
 app = Flask(__name__)
 
+
 @app.route("/sparql", methods=['POST', 'GET'])
 def sparql():
     if request.method == 'GET':
@@ -59,4 +60,4 @@ if __name__ == "__main__":
         usage()
         sys.exit(1)
     print port, mapping
-    app.run(port=port,host="0.0.0.0")
+    app.run(port=port, host="0.0.0.0")
