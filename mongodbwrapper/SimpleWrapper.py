@@ -21,11 +21,13 @@ class SimpleWrapper(object):
 
     def exeQuery(self, query):
         sparql = qp.parse(query)
-        mquery, mproj, predmap = self.rewrite(sparql)
+        mquery, mproj, cmpquery = self.rewrite(sparql)
         mproj["_id"] = 0
+
         pipeline = []
         if len(mquery) > 0:
             pipeline.append({"$match": mquery})
+
         pipeline.append({"$project": mproj})
         if sparql.limit > 0:
             if sparql.offset > 0:
@@ -33,7 +35,18 @@ class SimpleWrapper(object):
                 pipeline.append({"$skip": int(sparql.offset)})
             else:
                 pipeline.append({"$limit": int(sparql.limit)})
-        print "agg:", pipeline
+        res = []
+        print "pipeline:", pipeline
+
+        if len(cmpquery) > 0:
+            result = self.collection.aggregate(pipeline)
+            for r in result:
+                for c in cmpquery:
+                    if r[c] == cmpquery[c]:
+                        del r[c]
+                        res.append(r)
+            return res
+
         return list(self.collection.aggregate(pipeline))
 
     def rewrite(self, sparql):
@@ -42,19 +55,19 @@ class SimpleWrapper(object):
 
         qmap = []
         predobjmap = {}
+        objpredmap = {}
         filtermap = {}
-        predmap = []
+        predmap = {}
 
         for t in triplepatterns:
             if t.subject.constant:
-                filtermap[self.mapping[0].subjecttemplate[1:-1]] = t.subject.name
+                filtermap[self.mapping[0].subjecttemplate[1:-1]] = t.subject.name[1:-1]
             else:
                 predobjmap[t.subject.name] = t.subject.name
-                predmap.append((t.subject.name, self.mapping[0].subjecttemplate[1:-1]))
+                predmap[t.subject.name] = self.mapping[0].subjecttemplate[1:-1]
 
             if t.predicate.constant:
-                predobjmap[t.predicate.name] = t.theobject.name
-                qmap.append(t.predicate.name)
+
                 if t.theobject.constant:
                     if "<" in t.theobject.name and '>' in t.theobject.name:
                         value = str(t.theobject.name[1:-1])
@@ -69,21 +82,45 @@ class SimpleWrapper(object):
                             filtermap[t.predicate.name]["$in"].append(value)
                     else:
                         filtermap[t.predicate.name] = value
+                else:
+                    predobjmap[t.predicate.name] = t.theobject.name
+                    if t.theobject.name in objpredmap:
+                        if type(objpredmap[t.theobject.name]) == list:
+                            objpredmap[t.theobject.name].append(t.predicate.name)
+                        else:
+                            objpredmap[t.theobject.name] = [objpredmap[t.theobject.name]]
+                            objpredmap[t.theobject.name].append(t.predicate.name)
+                    else:
+                        objpredmap[t.theobject.name] = t.predicate.name
+                qmap.append(t.predicate.name)
 
         for p in self.mapping[0].predicates:
             if p.predicate in qmap:
                 if (p.predicate, p.refmap.name) not in predmap:
-                    predmap.append((p.predicate, p.refmap.name))
+                    predmap[p.predicate] = p.refmap.name
         mquery = {}
+        cmpquery = {}
         mproj = {}
+        if self.mapping[0].subjecttemplate[1:-1] in filtermap:
+            mquery[self.mapping[0].subjecttemplate[1:-1]] = filtermap[self.mapping[0].subjecttemplate[1:-1]]
         args = [a.name for a in sparql.args]
-        for k, v in predmap:
+
+        for k in predmap:
+            v = predmap[k]
             if k in filtermap:
                 mquery[v] = filtermap[k]
             if predobjmap[k] in args:
-                mproj[predobjmap[k][1:]] = "$"+v
+                mproj[predobjmap[k][1:]] = "$" + v
+            if predobjmap[k] in objpredmap and type(objpredmap[predobjmap[k]]) == list:
+                cm = {'$cmp': []}
+                for o in objpredmap[predobjmap[k]]:
+                    cm['$cmp'].append("$" + predmap[o])
+                mproj['cmp_'+predobjmap[k][1:]] = cm
+
+                cmpquery['cmp_'+predobjmap[k][1:]] = 0
 
         sparqlfilters = self.getFilters(filters, predmap, predobjmap)
+
         for f in sparqlfilters:
             if f in mquery:
                 if type(mquery[f]) == dict:
@@ -101,7 +138,7 @@ class SimpleWrapper(object):
             else:
                 mquery[f] = sparqlfilters[f]
 
-        return mquery, mproj, predmap
+        return mquery, mproj, cmpquery
 
     def getFilters(self, filters, predmap, predobjmap):
         fquery = {}
