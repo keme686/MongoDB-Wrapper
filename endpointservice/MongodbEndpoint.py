@@ -18,11 +18,14 @@ def sparql():
             molecule = request.args.get("molecule", '')
             query = request.args.get("query", '')
             query = query.replace('\n', ' ').replace('\r', ' ')
+            print 'query:', query
             sw = SimpleWrapper(molecule, mapping)
             res = sw.exeQuery(query)
+
             return jsonify({"result": res})
         except Exception as e:
-            print e
+            print "Exception", e
+            print {"result": [], "error": e.message}
             return jsonify({"result": [], "error": e.message})
     else:
         return jsonify({"result": [], "error": "Invalid HTTP method used. Use GET "})
