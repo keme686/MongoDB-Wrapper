@@ -58,13 +58,16 @@ class SimpleWrapper(object):
         objpredmap = {}
         filtermap = {}
         predmap = {}
-
+        mquery = {}
+        cmpquery = {}
+        mproj = {}
         for t in triplepatterns:
             if t.subject.constant:
                 filtermap[self.mapping[0].subjecttemplate[1:-1]] = t.subject.name[1:-1]
             else:
                 predobjmap[t.subject.name] = t.subject.name
                 predmap[t.subject.name] = self.mapping[0].subjecttemplate[1:-1]
+                mproj[t.subject.name] = "$"+self.mapping[0].subjecttemplate[1:-1]
 
             if t.predicate.constant:
 
@@ -98,9 +101,7 @@ class SimpleWrapper(object):
             if p.predicate in qmap:
                 if (p.predicate, p.refmap.name) not in predmap:
                     predmap[p.predicate] = p.refmap.name
-        mquery = {}
-        cmpquery = {}
-        mproj = {}
+
         if self.mapping[0].subjecttemplate[1:-1] in filtermap:
             mquery[self.mapping[0].subjecttemplate[1:-1]] = filtermap[self.mapping[0].subjecttemplate[1:-1]]
         args = [a.name for a in sparql.args]
